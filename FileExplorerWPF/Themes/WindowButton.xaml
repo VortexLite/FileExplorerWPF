@@ -1,0 +1,570 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cc="clr-namespace:FileExplorerWPF.Custom_Controls"
+                    xmlns:prop="clr-namespace:FileExplorerWPF.Properties" >
+    <!--#region Windows Button-->
+    <Style TargetType="{x:Type Button}" 
+           x:Key="WindowButtons">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Margin" Value="0 0 10 0"/>
+        <Setter Property="FontFamily" Value="Fonts/segmdl2.ttf"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontWeight" Value="Black"/>
+        <Setter Property="Height" Value="31"/>
+        <Setter Property="Width" Value="30"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border
+                        Padding="{TemplateBinding Padding}"
+                        Background="{TemplateBinding Background}">
+                        <ContentPresenter
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="IsMouseCaptured" Value="False"/>
+                            </MultiTrigger.Conditions>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type Button}"
+           x:Key="WindowCloseButtonStyle"
+           BasedOn="{StaticResource WindowButtons}">
+        <Style.Triggers>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsMouseOver" 
+                               Value="True"/>
+                    <Condition Property="IsMouseCaptured"
+                               Value="False"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="Background"
+                        Value="#e54a59"/>
+            </MultiTrigger>
+
+            <Trigger Property="IsPressed"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="#e13c55"/>
+            </Trigger>
+
+            <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                         Value="Maximized">
+                <Setter Property="Content" Value="&#xE923;" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type Button}"
+           x:Key="WindowOtherButtonStyle"
+           BasedOn="{StaticResource WindowButtons}">
+        <Style.Triggers>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsMouseOver" 
+                               Value="True"/>
+                    <Condition Property="IsMouseCaptured"
+                               Value="False"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="Background"
+                        Value="#656a7e"/>
+                <Setter Property="Opacity"
+                        Value=".60"/>
+            </MultiTrigger>
+
+            <Trigger Property="IsPressed"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="#474a58"/>
+                <Setter Property="Opacity"
+                        Value=".80"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <!--#endregion-->
+
+    <!--#region Drive and Folder Buttons-->
+    <Style TargetType="{x:Type cc:DriveAndFolderButton}">
+        <Setter Property="Foreground" Value="#fdfcff"/>
+        <Setter Property="GroupName" Value="DNFButton"/>
+        <Setter Property="MinHeight" Value="25"/>
+        <Setter Property="MinWidth" Value="100"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type cc:DriveAndFolderButton}">
+                    <Grid
+                        Background="Transparent">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="47"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border x:Name="bgBorder"
+                                Grid.ColumnSpan="3"
+                                BorderBrush="#909094"
+                                BorderThickness="1"
+                                Opacity=".2"
+                                Visibility="Collapsed">
+                            <Rectangle Fill="#f9fdff"
+                                       Opacity=".2"/>
+                            
+                        </Border>
+
+                        <Path
+                            Grid.Column="0"
+                            Data="{TemplateBinding Icon}"
+                            Stretch="Uniform"
+                            Fill="#eaebeb"
+                            Height="15"
+                            Width="20"
+                            Effect="{DynamicResource DropShadowEffect}"/>
+
+                        <ContentPresenter
+                            Grid.Column="1"
+                            VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            Effect="{DynamicResource DropShadowEffect}"/>
+                        
+                        <!--Unpin Button-->
+                        <Button
+                            x:Name="UnPinButton"
+                            Background="Transparent"
+                            Content="{DynamicResource UnPin}"
+                            Command="{TemplateBinding UnPinCommand}"
+                            CommandParameter="{Binding}"
+                            Style="{DynamicResource ButtonWithIconStyle}"
+                            Grid.Column="2"
+                            Width="40"
+                            Foreground="#eaebeb"
+                            Visibility="Collapsed"/>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter TargetName="bgBorder"
+                                    Property="Visibility"
+                                    Value="Visible"/>
+                        </Trigger>
+                        
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter TargetName="bgBorder"
+                                    Property="Opacity"
+                                    Value=".5"/>
+                        </Trigger>
+
+                        <Trigger Property="IsChecked"
+                                 Value="True">
+                            <Setter TargetName="bgBorder"
+                                    Property="Visibility"
+                                    Value="Visible"/>
+                            <Setter TargetName="bgBorder"
+                                    Property="Opacity"
+                                    Value=".5"/>
+                        </Trigger>
+                        <DataTrigger Binding="{Binding IsPinned}"
+                                     Value="True">
+                            <Setter TargetName="UnPinButton"
+                                    Property="Visibility"
+                                    Value="Visible"/>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type TextBlock}" 
+           x:Key="IconTextBlock">
+        <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="Margin" Value="15 5 0 0"/>
+        <Setter Property="Foreground" Value="white"/>
+    </Style>
+
+    <Style TargetType="{x:Type Label}" 
+           x:Key="iconLabel">
+        <Setter Property="FontFamily" Value="Fonts/NotoSans-Regular.ttf"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="Margin" Value="50,-23,0,0"/>
+        <Setter Property="Foreground" Value="white"/>
+    </Style>
+
+    <Style TargetType="{x:Type TextBlock}" 
+           x:Key="TextNav">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
+
+    <Style TargetType="{x:Type StackPanel}"
+           x:Key="StackpanelIsMouseOver">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Visibility" Value="Visible"/>
+                <Setter Property="Background" Value="#4a535d"/>
+                <Setter Property="Opacity" Value=".5"/>
+            </Trigger>
+
+        </Style.Triggers>
+    </Style>
+    <!--#endregion-->
+    
+    <!--#region Menu Header Buttons-->
+
+    <Style x:Key="MenuRadioButtonStyle"
+           TargetType="{x:Type RadioButton}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Padding" Value="20,0"/>
+        <Setter Property="Foreground" Value="#909090"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="GroupName" Value="MenuHeader"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RadioButton}">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        Padding="{TemplateBinding Padding}">
+                        <ContentPresenter/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked"
+                                 Value="True">
+                            <Setter Property="Foreground" Value="#343434"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                        </Trigger>
+
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding DarkMode, Source={x:Static prop:Settings.Default}}"
+                                           Value="True"/>
+                                <Condition Binding="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
+                                           Value="True"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="Foreground"
+                                    Value="White"/>
+                        </MultiDataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!--#endregion-->
+    
+    <!--#region Buttons With Icons-->
+
+    <Style x:Key="ButtonWithIconStyle"
+           TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Width" Value="15"/>
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}">
+                        <Path
+                            x:Name="Path"
+                            Data="{TemplateBinding Content}"
+                            Fill="{TemplateBinding Foreground}"
+                            Height="{TemplateBinding FontSize}"
+                            Stretch="Uniform"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding DarkMode, Source={x:Static prop:Settings.Default}}"
+                                           Value="False"/>
+                                <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}"
+                                           Value="True"/>
+                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" 
+                                           Value="True"/>
+                                <Condition Binding="{Binding IsMouseCaptured, RelativeSource={RelativeSource Self}}" 
+                                           Value="False"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="Background" Value="#fafafa"/>
+                        </MultiDataTrigger>
+
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Foreground" Value="#717171" />
+                        </Trigger>
+
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding DarkMode, Source={x:Static prop:Settings.Default}}"
+                                           Value="True"/>
+                                <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}"
+                                           Value="True"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="Foreground"
+                                    Value="#7c7c7c"/>
+                        </MultiDataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style x:Key="ToggleButtonWithIconStyle"
+           TargetType="{x:Type ToggleButton}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Width" Value="15"/>
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Background="{TemplateBinding Background}">
+                        <Path
+                            x:Name="Path"
+                            Data="{TemplateBinding Content}"
+                            Fill="{TemplateBinding Foreground}"
+                            Height="{TemplateBinding FontSize}"
+                            Stretch="Uniform"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding DarkMode, Source={x:Static prop:Settings.Default}}"
+                                     Value="True">
+                            <Setter Property="Foreground" Value="#91928f"/>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!--#endregion-->
+    
+    <!--#region Toggle Expand/Collapse Sub Menu-->
+
+    <Style x:Key="ExpandCollapseToggleButtonStyle"
+           TargetType="{x:Type ToggleButton}"
+           BasedOn="{StaticResource ToggleButtonWithIconStyle}">
+        <Setter Property="Content" Value="{DynamicResource CollapseArrow}"/>
+        <Style.Triggers>
+            <Trigger Property="IsChecked"
+                     Value="True">
+                <Setter Property="Content" Value="{DynamicResource ExpandArrow}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--#endregion-->
+
+    <!--#region DarkLightToggleButton-->
+
+    <Style x:Key="DarkLightModeToggleButtonStyle"
+           TargetType="{x:Type ToggleButton}"
+           BasedOn="{StaticResource ToggleButtonWithIconStyle}">
+        <Setter Property="Content" Value="{DynamicResource Moon}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DarkMode, Source={x:Static prop:Settings.Default}}"
+                         Value="True">
+                <Setter Property="Content" Value="{DynamicResource Sun}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    
+    <!--#endregion-->
+
+    <!--#region Sub Menu Icon Button-->
+
+    <Style x:Key="SubMenuIconButtonStyle"
+           TargetType="{x:Type cc:SubMenuIconButton}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Foreground" Value="#2f2d2e"/>
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="MinWidth" Value="60" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type cc:SubMenuIconButton}">
+                    <Border Background="{TemplateBinding Background}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid>
+                            <Border Name="bgBorder"
+                                    BorderBrush="#929092"
+                                    BorderThickness="1"
+                                    Opacity=".1"
+                                    Visibility="Collapsed">
+                                <Rectangle
+                                    Fill="#ffffff"
+                                    Opacity=".1"/>
+                            </Border>
+                            <StackPanel
+                                Orientation="Vertical"
+                                Margin="5">
+                                <Path
+                                    Name="Path"
+                                    Data="{TemplateBinding Icon}"
+                                    Fill="{TemplateBinding Foreground}"
+                                    Height="24"
+                                    Stretch="Uniform"/>
+                                
+                                <TextBlock
+                                    x:Name="TextBlock"
+                                    Margin="0,5,0,0"
+                                    FontWeight="SemiBold"
+                                    Text="{TemplateBinding Content}"
+                                    HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger
+                            SourceName="TextBlock"
+                            Property="Text"
+                            Value="">
+                            <Setter TargetName="TextBlock"  Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+
+                        <Trigger Property="IsMouseCaptured"
+                                 Value="True">
+                            <Setter TargetName="bgBorder"  Property="Visibility" Value="Visible" />
+                            <Setter TargetName="bgBorder"  Property="Opacity" Value="1" />
+                        </Trigger>
+
+                        <DataTrigger Binding="{Binding DarkMode, Source={x:Static prop:Settings.Default}}"
+                                     Value="True">
+                            <Setter Property="Foreground" Value="#91928f"/>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!--#endregion-->
+    
+    <!--#region Navigation Buttons-->
+
+    <Style x:Key="NavigationButtonsLeft"
+           TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}">
+                        
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsEnabled" Value="True"/>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="IsMouseCaptured" Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" Value="#fafafa"/>
+                        </MultiTrigger>
+
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Foreground"
+                                    Value="#6d6f6f"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NavigationButtonsRight"
+           TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}">
+                        
+
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsEnabled" Value="True"/>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="IsMouseCaptured" Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" Value="#fafafa"/>
+                        </MultiTrigger>
+
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Foreground"
+                                    Value="#6d6f6f"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NavigationButtonsUp"
+           TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}">
+                        
+
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsEnabled" Value="True"/>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="IsMouseCaptured" Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" Value="#fafafa"/>
+                        </MultiTrigger>
+
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Foreground"
+                                    Value="#6d6f6f"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion-->
+</ResourceDictionary>
